@@ -140,8 +140,8 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="ClassDiagram1.cd" />
-    <None Include="Properties\PublishProfiles\botgkskatowice - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\botgkskatowice - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\GminaKleszczowBot - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\GminaKleszczowBot - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

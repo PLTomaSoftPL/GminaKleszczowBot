@@ -10,7 +10,7 @@ namespace GksKatowiceBot.Helpers
     public class BaseDB
     {
 
-        public static string appName = "";
+        public static string appName = "GminaKleszczow";
 
 
 

@@ -32,17 +32,17 @@ namespace GksKatowiceBot
                 if (activity.Type == ActivityTypes.Message)
                 {
 
-                    if (BaseDB.czyAdministrator(activity.From.Id)!=null && ( ((activity.Text!=null && activity.Text.IndexOf("!!!") == 0 )|| (activity.Attachments!=null && activity.Attachments.Count>0))))
+                    if (BaseDB.czyAdministrator(activity.From.Id) != null && (((activity.Text != null && activity.Text.IndexOf("!!!") == 0) || (activity.Attachments != null && activity.Attachments.Count > 0))))
                     {
                         WebClient client = new WebClient();
 
-                        if (activity.Attachments!=null)
+                        if (activity.Attachments != null)
                         {
                             //Uri uri = new Uri(activity.Attachments[0].ContentUrl);
-                            string filename = activity.Attachments[0].ContentUrl.Substring(activity.Attachments[0].ContentUrl.Length - 4, 3).Replace(".","");
+                            string filename = activity.Attachments[0].ContentUrl.Substring(activity.Attachments[0].ContentUrl.Length - 4, 3).Replace(".", "");
 
 
-                          //  WebClient client = new WebClient();
+                            //  WebClient client = new WebClient();
                             client.Credentials = new NetworkCredential("serwer1606926", "Tomason1910");
                             client.BaseAddress = "ftp://serwer1606926.home.pl/public_html/pub/";
 
@@ -52,13 +52,13 @@ namespace GksKatowiceBot
                             {
                                 data = client2.DownloadData(activity.Attachments[0].ContentUrl);
                             }
-                            if(activity.Attachments[0].ContentType.Contains("image")) client.UploadData(filename+".png", data); //since the baseaddress
-                            else if(activity.Attachments[0].ContentType.Contains("video")) client.UploadData(filename + ".mp4", data);
+                            if (activity.Attachments[0].ContentType.Contains("image")) client.UploadData(filename + ".png", data); //since the baseaddress
+                            else if (activity.Attachments[0].ContentType.Contains("video")) client.UploadData(filename + ".mp4", data);
                         }
 
 
-                        CreateMessage(activity.Attachments, activity.Text == null ? "" : activity.Text.Replace("!!!",""),activity.From.Id);
-                        
+                        CreateMessage(activity.Attachments, activity.Text == null ? "" : activity.Text.Replace("!!!", ""), activity.From.Id);
+
                     }
                     else
                     {
@@ -79,7 +79,7 @@ namespace GksKatowiceBot
                         }
 
                         MicrosoftAppCredentials.TrustServiceUrl(@"https://facebook.botframework.com", DateTime.MaxValue);
-                            if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Pilka_Nozna" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Pilka_Nozna")
+                        if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci")
                         {
                             Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
                             userStruct.userName = activity.From.Name;
@@ -88,8 +88,8 @@ namespace GksKatowiceBot
                             userStruct.botId = activity.Recipient.Id;
                             userStruct.ServiceUrl = activity.ServiceUrl;
 
-                     //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                    //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                             Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -127,22 +127,29 @@ namespace GksKatowiceBot
                                 {
                                     content_type = "text",
                                     title = "Aktualności",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Pilka_NoznaAktualnosci",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
                                     //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
                                  //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
                                 },
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Galeria",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Pilka_NoznaGaleria",
+                                    title = "O Gminie",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_OGminie",
                                //       image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
                                 },
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Video",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Pilka_NoznaVideo",
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
                                 //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
                                 },
                                                                    }
@@ -155,13 +162,11 @@ namespace GksKatowiceBot
                             message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                             List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
 
-                        //    message.Attachments = BaseGETMethod.GetCardsAttachments(ref hrefList, true);
+                            message.Attachments = BaseGETMethod.GetCardsAttachmentsAktualnosci(ref hrefList, true);
 
                             await connector.Conversations.SendToConversationAsync((Activity)message);
                         }
-                  
-                        else
-                                    if (activity.Text == "USER_DEFINED_PAYLOAD")
+                        else if (komenda == "DEVELOPER_DEFINED_PAYLOAD_OGminie" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_OGminie")
                         {
                             Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
                             userStruct.userName = activity.From.Name;
@@ -170,7 +175,272 @@ namespace GksKatowiceBot
                             userStruct.botId = activity.Recipient.Id;
                             userStruct.ServiceUrl = activity.ServiceUrl;
 
-                 //           BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+
+                            Parameters.Parameters.listaAdresow.Add(userStruct);
+                            ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                            var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
+                            var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
+                            connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                            var conversationId = await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount);
+                            IMessageActivity message = Activity.CreateMessageActivity();
+                            message.ChannelData = JObject.FromObject(new
+                            {
+                                notification_type = "REGULAR",
+
+
+                                buttons = new dynamic[]
+                            {
+                            new
+                        {
+                                type = "web_url",
+                                url = "https://petersfancyapparel.com/classic_white_tshirt",
+                                title = "Wyniki",
+                                webview_height_ratio = "compact"
+                            }
+                            },
+
+                                quick_replies = new dynamic[]
+                                   {
+                                //new
+                                //{oh
+                                //    content_type = "text",
+                                //    title = "Aktualności",
+                                //    payload = "DEFINED_PAYLOAD_FOR_PICKING_BLUE",
+                                //    image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Blue%20Ball.png"
+                                //},
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Aktualności",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
+                                    //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                 //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "O Gminie",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_OGminie",
+                               //       image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                                                   }
+                            });
+
+
+                            message.From = botAccount;
+                            message.Recipient = userAccount;
+                            message.Conversation = new ConversationAccount(id: conversationId.Id);
+                            message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                            List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
+
+                            //    message.Attachments = BaseGETMethod.GetCardsAttachments(ref hrefList, true);
+
+                            await connector.Conversations.SendToConversationAsync((Activity)message);
+                        }
+                        else if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Kultura" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Kultura")
+                        {
+                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
+                            userStruct.userName = activity.From.Name;
+                            userStruct.userId = activity.From.Id;
+                            userStruct.botName = activity.Recipient.Name;
+                            userStruct.botId = activity.Recipient.Id;
+                            userStruct.ServiceUrl = activity.ServiceUrl;
+
+                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+
+                            Parameters.Parameters.listaAdresow.Add(userStruct);
+                            ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                            var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
+                            var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
+                            connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                            var conversationId = await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount);
+                            IMessageActivity message = Activity.CreateMessageActivity();
+                            message.ChannelData = JObject.FromObject(new
+                            {
+                                notification_type = "REGULAR",
+
+
+                                buttons = new dynamic[]
+                            {
+                            new
+                        {
+                                type = "web_url",
+                                url = "https://petersfancyapparel.com/classic_white_tshirt",
+                                title = "Wyniki",
+                                webview_height_ratio = "compact"
+                            }
+                            },
+
+                                quick_replies = new dynamic[]
+                                   {
+                                //new
+                                //{oh
+                                //    content_type = "text",
+                                //    title = "Aktualności",
+                                //    payload = "DEFINED_PAYLOAD_FOR_PICKING_BLUE",
+                                //    image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Blue%20Ball.png"
+                                //},
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Aktualności",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
+                                    //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                 //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "O Gminie",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_OGminie",
+                               //       image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                                                   }
+                            });
+
+
+                            message.From = botAccount;
+                            message.Recipient = userAccount;
+                            message.Conversation = new ConversationAccount(id: conversationId.Id);
+                            message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                            List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
+
+                            message.Attachments = BaseGETMethod.GetCardsAttachmentsKultura(ref hrefList, true);
+
+                            await connector.Conversations.SendToConversationAsync((Activity)message);
+                        }
+                        else if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Sport" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Sport")
+                        {
+                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
+                            userStruct.userName = activity.From.Name;
+                            userStruct.userId = activity.From.Id;
+                            userStruct.botName = activity.Recipient.Name;
+                            userStruct.botId = activity.Recipient.Id;
+                            userStruct.ServiceUrl = activity.ServiceUrl;
+
+                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+
+                            Parameters.Parameters.listaAdresow.Add(userStruct);
+                            ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                            var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
+                            var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
+                            connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                            var conversationId = await connector.Conversations.CreateDirectConversationAsync(botAccount, userAccount);
+                            IMessageActivity message = Activity.CreateMessageActivity();
+                            message.ChannelData = JObject.FromObject(new
+                            {
+                                notification_type = "REGULAR",
+
+
+                                buttons = new dynamic[]
+                            {
+                            new
+                        {
+                                type = "web_url",
+                                url = "https://petersfancyapparel.com/classic_white_tshirt",
+                                title = "Wyniki",
+                                webview_height_ratio = "compact"
+                            }
+                            },
+
+                                quick_replies = new dynamic[]
+                                   {
+                                //new
+                                //{oh
+                                //    content_type = "text",
+                                //    title = "Aktualności",
+                                //    payload = "DEFINED_PAYLOAD_FOR_PICKING_BLUE",
+                                //    image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Blue%20Ball.png"
+                                //},
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Aktualności",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
+                                    //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                 //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "O Gminie",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_OGminie",
+                               //       image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                                                   }
+                            });
+
+
+                            message.From = botAccount;
+                            message.Recipient = userAccount;
+                            message.Conversation = new ConversationAccount(id: conversationId.Id);
+                            message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                            List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
+
+                            message.Attachments = BaseGETMethod.GetCardsAttachmentsSport(ref hrefList, true);
+
+                            await connector.Conversations.SendToConversationAsync((Activity)message);
+                        }
+
+
+
+                        else
+                                if (activity.Text == "USER_DEFINED_PAYLOAD")
+                        {
+                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
+                            userStruct.userName = activity.From.Name;
+                            userStruct.userId = activity.From.Id;
+                            userStruct.botName = activity.Recipient.Name;
+                            userStruct.botId = activity.Recipient.Id;
+                            userStruct.ServiceUrl = activity.ServiceUrl;
+
+                            //           BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
                             BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                             Parameters.Parameters.listaAdresow.Add(userStruct);
@@ -195,9 +465,9 @@ namespace GksKatowiceBot
                                 //     }
                                 // },
                                 quick_replies = new dynamic[]
-                            {
+                                   {
                                 //new
-                                //{
+                                //{oh
                                 //    content_type = "text",
                                 //    title = "Aktualności",
                                 //    payload = "DEFINED_PAYLOAD_FOR_PICKING_BLUE",
@@ -206,26 +476,35 @@ namespace GksKatowiceBot
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Piłka nożna",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Pilka_Nozna",
+                                    title = "Aktualności",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
                                     //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
-                            //        image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
+                                 //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
                                 },
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Siatkówka",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Siatkowka",
-                       //             image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
-                                },                                new
+                                    title = "O Gminie",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_OGminie",
+                               //       image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
+                                },
+                                new
                                 {
                                     content_type = "text",
-                                    title = "Hokej",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Hokej",
-                                //       image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
                                 },
-                                                           }
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                                                   }
                             });
+
 
 
                             message.From = botAccount;
@@ -247,7 +526,7 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
                             await connector.Conversations.SendToConversationAsync((Activity)message);
                         }
                         else
-                                    if (activity.Text == "DEVELOPER_DEFINED_PAYLOAD_HELP")
+                                if (activity.Text == "DEVELOPER_DEFINED_PAYLOAD_HELP" || activity.Text == "HELP")
                         {
                             Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
                             userStruct.userName = activity.From.Name;
@@ -256,8 +535,8 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
                             userStruct.botId = activity.Recipient.Id;
                             userStruct.ServiceUrl = activity.ServiceUrl;
 
-             //               BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-           //                 BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                            //               BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                            //                 BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                             Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -281,9 +560,9 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
                                 //     }
                                 // },
                                 quick_replies = new dynamic[]
-                            {
+                                   {
                                 //new
-                                //{
+                                //{oh
                                 //    content_type = "text",
                                 //    title = "Aktualności",
                                 //    payload = "DEFINED_PAYLOAD_FOR_PICKING_BLUE",
@@ -292,26 +571,35 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Piłka nożna",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Pilka_Nozna",
+                                    title = "Aktualności",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
                                     //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
-                            //        image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
+                                 //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
                                 },
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Siatkówka",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Siatkowka",
-                       //             image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
-                                },                                new
+                                    title = "O Gminie",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_OGminie",
+                               //       image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
+                                },
+                                new
                                 {
                                     content_type = "text",
-                                    title = "Hokej",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Hokej",
-                                //       image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
                                 },
-                                                           }
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                                                   }
                             });
+
 
 
                             message.From = botAccount;
@@ -344,8 +632,8 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
                             userStruct.botId = activity.Recipient.Id;
                             userStruct.ServiceUrl = activity.ServiceUrl;
 
-                        //    BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-               //             BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
+                            //    BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
+                            //             BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
                             Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
@@ -369,9 +657,9 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
                                 //     }
                                 // },
                                 quick_replies = new dynamic[]
-                            {
+                                   {
                                 //new
-                                //{
+                                //{oh
                                 //    content_type = "text",
                                 //    title = "Aktualności",
                                 //    payload = "DEFINED_PAYLOAD_FOR_PICKING_BLUE",
@@ -380,26 +668,35 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Piłka nożna",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Pilka_Nozna",
+                                    title = "Aktualności",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
                                     //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
-                                   // image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
+                                 //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
                                 },
                                 new
                                 {
                                     content_type = "text",
-                                    title = "Siatkówka",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Siatkowka",
-                           //         image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
-                                },                                new
+                                    title = "O Gminie",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_OGminie",
+                               //       image_url = "https://gim7bytom.edupage.org/global/pics/iconspro/sport/volleyball.png"
+                                },
+                                new
                                 {
                                     content_type = "text",
-                                    title = "Hokej",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Hokej",
-                                //       image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
                                 },
-                                                           }
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                                                   }
                             });
+
 
 
                             message.From = botAccount;
@@ -428,7 +725,7 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
             return response;
         }
 
-        public async static void CreateMessage(IList<Attachment> foto,string wiadomosc,string fromId)
+        public async static void CreateMessage(IList<Attachment> foto, string wiadomosc, string fromId)
         {
             try
             {
@@ -472,7 +769,7 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
 
                     message.AttachmentLayout = null;
 
-                    if (foto!=null && foto.Count > 0)
+                    if (foto != null && foto.Count > 0)
                     {
                         string filename = foto[0].ContentUrl.Substring(foto[0].ContentUrl.Length - 4, 3).Replace(".", "");
 
@@ -483,8 +780,8 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
 
                         message.Attachments = foto;
                     }
-                    
-                    
+
+
                     //var list = new List<Attachment>();
                     //if (foto != null)
                     //{
@@ -539,7 +836,7 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
 
 
 
-      
+
 
         public static void CallToChildThread()
         {
@@ -594,10 +891,10 @@ Zaznacz tylko w rozwijanym menu lub skorzystaj z podpowiedzi, która sekcja cię
         }
 
 
-     
 
 
 
-     
+
+
     }
 }

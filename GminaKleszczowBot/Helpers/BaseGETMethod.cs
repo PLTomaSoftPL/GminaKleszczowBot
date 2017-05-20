@@ -15,168 +15,770 @@ namespace GksKatowiceBot.Helpers
     public class BaseGETMethod
     {
 
- 
-        //public static IList<Attachment> GetCardsAttachments(ref List<IGrouping<string, string>> hrefList, bool newUser = false)
-        //{
-        ////    List<Attachment> list = new List<Attachment>();
 
-        ////    string urlAddress = "http://www.gkskatowice.eu/index";
-        ////    // string urlAddress = "http://www.orlenliga.pl/";
+        public static IList<Attachment> GetCardsAttachmentsAktualnosci(ref List<IGrouping<string, string>> hrefList, bool newUser = false)
+        {
+            List<Attachment> list = new List<Attachment>();
 
-        ////    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-        ////    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            string urlAddress = "https://www.kleszczow.pl";
+            // string urlAddress = "http://www.orlenliga.pl/";
 
-        ////    var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            request.Accept = "text/html";
+            request.Method = "GET";
+            request.UserAgent = ".NET Framework Test Client";
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-        ////    if (response.StatusCode == HttpStatusCode.OK)
-        ////    {
-        ////        Stream receiveStream = response.GetResponseStream();
-        ////        StreamReader readStream = null;
+            var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
 
-        ////        if (response.CharacterSet == null)
-        ////        {
-        ////            readStream = new StreamReader(receiveStream);
-        ////        }
-        ////        else
-        ////        {
-        ////            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-        ////        }
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
 
-        ////        string data = readStream.ReadToEnd();
+                if (response.CharacterSet == null)
+                {
+                    readStream = new StreamReader(receiveStream);
+                }
+                else
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
 
-        ////        HtmlDocument doc = new HtmlDocument();
-        ////        doc.LoadHtml(data);
+                string data = readStream.ReadToEnd();
 
-        ////        string matchResultDivId = "carousel-inner";
-        ////        string xpath = String.Format("//div[@class='{0}']/div", matchResultDivId);
-        ////        var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
-        ////        string text = "";
-        ////        foreach (var person in people)
-        ////        {
-        ////            text += person;
-        ////        }
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(data);
 
-        ////        HtmlDocument doc2 = new HtmlDocument();
+                string matchResultDivId = "media";
+                string xpath = String.Format("//div[@class='{0}']", matchResultDivId);
+                var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
+                string text = "";
+                foreach (var person in people)
+                {
+                    text += person;
+                }
 
-        ////        doc2.LoadHtml(text);
-        ////        hrefList = doc2.DocumentNode.SelectNodes("//a")
-        ////                          .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/n/") || p.Contains("/video/") || p.Contains("/gallery/") || p.Contains("/blog/")).GroupBy(p => p.ToString())
-        ////                          .ToList();
+                HtmlDocument doc2 = new HtmlDocument();
 
-        ////        var imgList = doc2.DocumentNode.SelectNodes("//img")
-        ////                          .Select(p => p.GetAttributeValue("src", "not found"))
-        ////                          .ToList();
+                doc2.LoadHtml(text);
+                hrefList = doc2.DocumentNode.SelectNodes("//a")
+                                  .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/aktualnosci/")).GroupBy(p => p.ToString())
+                                  .ToList();
 
-        ////        var titleList = doc2.DocumentNode.SelectNodes("//img")
-        ////                          .Select(p => p.GetAttributeValue("alt", "not found"))
-        ////                          .ToList();
+                var imgList = doc2.DocumentNode.SelectNodes("//img")
+                                  .Select(p => p.GetAttributeValue("src", "not found"))
+                                  .ToList();
 
-        ////        response.Close();
-        ////        readStream.Close();
+                var titleList = doc2.DocumentNode.SelectNodes("//h2").Select(p=>p.InnerText)
+                                  .ToList();
 
-        ////        int index = 5;
+                response.Close();
+                readStream.Close();
 
-        ////        DataTable dt = GetWiadomosciPilka();
+                int index = 5;
 
-        ////        if (newUser == true)
-        ////        {
-        ////            index = 5;
-        ////            if (dt.Rows.Count == 0)
-        ////            {
-        ////                //    AddWiadomosc(hrefList);
-        ////            }
-        ////        }
+         //       DataTable dt = GetWiadomosciPilka();
 
-        ////        else
-        ////        {
-        ////            if (dt.Rows.Count > 0)
-        ////            {
-        ////                List<int> deleteList = new List<int>();
-        ////                var listTemp = new List<System.Linq.IGrouping<string, string>>();
-        ////                var imageListTemp = new List<string>();
-        ////                var titleListTemp = new List<string>();
+                if (newUser == true)
+                {
 
-        ////                for (int i = 0; i < hrefList.Count; i++)
-        ////                {
-        ////                    if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
-        ////                        dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key
-        ////                    )
-        ////                    {
-        ////                        listTemp.Add(hrefList[i]);
-        ////                        imageListTemp.Add("http://www.gkskatowice.eu" + imgList[i]);
-        ////                        titleListTemp.Add(titleList[i].Replace("&quot;", ""));
-        ////                    }
-        ////                    listTemp2.Add(hrefList[i]);
-        ////                }
-        ////                hrefList = listTemp;
-        ////                index = hrefList.Count;
-        ////                imgList = imageListTemp;
-        ////                titleList = titleListTemp;
-        ////                //   AddWiadomosc(listTemp2);
-        ////            }
-        ////            else
-        ////            {
-        ////                index = 5;
-        ////                //   AddWiadomosc(hrefList);
-        ////            }
-        ////        }
+                    //    if (.Count > 0)
+                    //    {
+                    //        List<int> deleteList = new List<int>();
+                    //        var listTemp = new List<System.Linq.IGrouping<string, string>>();
+                    //        var imageListTemp = new List<string>();
+                    //        var titleListTemp = new List<string>();
 
-        ////        for (int i = 0; i < index; i++)
-        ////        {
-        ////            string link = "";
-        ////            if (hrefList[i].Key.Contains("http"))
-        ////            {
-        ////                link = hrefList[i].Key;
-        ////            }
-        ////            else
-        ////            {
-        ////                link = "http://www.gkskatowice.eu" + hrefList[i].Key;
-        ////                //link = "http://www.orlenliga.pl/" + hrefList[i].Key;
-        ////            }
+                    //        for (int i = 0; i < hrefList.Count; i++)
+                    //        {
+                    //            if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
+                    //                dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key
+                    //            )
+                    //            {
+                    //                listTemp.Add(hrefList[i]);
+                    //                imageListTemp.Add("http://www.gkskatowice.eu" + imgList[i]);
+                    //                titleListTemp.Add(titleList[i].Replace("&quot;", ""));
+                    //            }
+                    //            listTemp2.Add(hrefList[i]);
+                    //        }
+                    //        hrefList = listTemp;
+                    //        index = hrefList.Count;
+                    //        imgList = imageListTemp;
+                    //        titleList = titleListTemp;
+                    //        //   AddWiadomosc(listTemp2);
+                    //    }
+                    //    else
+                    //    {
+                    //        index = 5;
+                    //        //   AddWiadomosc(hrefList);
+                    //    }
+                    //}
 
-        ////            if (link.Contains("video"))
-        ////            {
-        ////                list.Add(GetHeroCard(
-        ////                titleList[i].Replace("&quot;", ""), "", "",
-        ////                new CardImage(url: imgList[i]),
-        ////                new CardAction(ActionTypes.OpenUrl, "Oglądaj video", value: link),
-        ////                new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
-        ////                );
-        ////            }
-        ////            else
-        ////                if (link.Contains("gallery"))
-        ////            {
-        ////                list.Add(GetHeroCard(
-        ////                titleList[i].Replace("&quot;", ""), "", "",
-        ////                new CardImage(url: imgList[i]),
-        ////                new CardAction(ActionTypes.OpenUrl, "Przeglądaj galerie", value: link),
-        ////                new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
-        ////                );
-        ////            }
-        ////            else
-        ////            {
-        ////                list.Add(GetHeroCard(
-        ////                titleList[i].Replace("&quot;", ""), "", "",
-        ////                new CardImage(url: "http://www.gkskatowice.eu" + imgList[i]),
-        ////                new CardAction(ActionTypes.OpenUrl, "Więcej", value: link),
-        ////                new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
-        ////                );
-        ////            }
+                    for (int i = 0; i < index; i++)
+                    {
+                        string link = "";
+                        if (hrefList[i].Key.Contains("http"))
+                        {
+                            link = hrefList[i].Key;
+                        }
+                        else
+                        {
+                            link = "http://www.gkskatowice.eu" + hrefList[i].Key;
+                            //link = "http://www.orlenliga.pl/" + hrefList[i].Key;
+                        }
 
-        ////            //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
-        ////        }
-        ////    }
-        ////    if (listTemp2.Count > 0)
-        ////    {
-        ////        hrefList = listTemp2;
-        ////    }
+                        if (link.Contains("video"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Oglądaj video", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                            if (link.Contains("gallery"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Przeglądaj galerie", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString().Replace("&#8211;","-"), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Więcej", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
 
-        ////    return list;
+                        //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
+                    }
+                }
+                if (listTemp2.Count > 0)
+                {
+                    hrefList = listTemp2;
+                }
+            }
+                return list;
 
-        //}
-        
-   
-      
+        }
+
+        public static IList<Attachment> GetCardsAttachmentsKultura(ref List<IGrouping<string, string>> hrefList, bool newUser = false)
+        {
+            List<Attachment> list = new List<Attachment>();
+
+            string urlAddress = "https://www.kleszczow.pl/kultura-komunikaty/";
+            // string urlAddress = "http://www.orlenliga.pl/";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            request.Accept = "text/html";
+            request.Method = "GET";
+            request.UserAgent = ".NET Framework Test Client";
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+
+                if (response.CharacterSet == null)
+                {
+                    readStream = new StreamReader(receiveStream);
+                }
+                else
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
+
+                string data = readStream.ReadToEnd();
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(data);
+
+                string matchResultDivId = "media";
+                string xpath = String.Format("//div[@class='{0}']", matchResultDivId);
+                var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
+                string text = "";
+                foreach (var person in people)
+                {
+                    text += person;
+                }
+
+                HtmlDocument doc2 = new HtmlDocument();
+
+                doc2.LoadHtml(text);
+                hrefList = doc2.DocumentNode.SelectNodes("//a")
+                                  .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/aktualnosci/")).GroupBy(p => p.ToString())
+                                  .ToList();
+
+                var imgList = doc2.DocumentNode.SelectNodes("//img")
+                                  .Select(p => p.GetAttributeValue("src", "not found"))
+                                  .ToList();
+
+                var titleList = doc2.DocumentNode.SelectNodes("//h2").Select(p => p.InnerText)
+                                  .ToList();
+
+                response.Close();
+                readStream.Close();
+
+                int index = 5;
+
+                //       DataTable dt = GetWiadomosciPilka();
+
+                if (newUser == true)
+                {
+
+                    //    if (.Count > 0)
+                    //    {
+                    //        List<int> deleteList = new List<int>();
+                    //        var listTemp = new List<System.Linq.IGrouping<string, string>>();
+                    //        var imageListTemp = new List<string>();
+                    //        var titleListTemp = new List<string>();
+
+                    //        for (int i = 0; i < hrefList.Count; i++)
+                    //        {
+                    //            if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
+                    //                dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key
+                    //            )
+                    //            {
+                    //                listTemp.Add(hrefList[i]);
+                    //                imageListTemp.Add("http://www.gkskatowice.eu" + imgList[i]);
+                    //                titleListTemp.Add(titleList[i].Replace("&quot;", ""));
+                    //            }
+                    //            listTemp2.Add(hrefList[i]);
+                    //        }
+                    //        hrefList = listTemp;
+                    //        index = hrefList.Count;
+                    //        imgList = imageListTemp;
+                    //        titleList = titleListTemp;
+                    //        //   AddWiadomosc(listTemp2);
+                    //    }
+                    //    else
+                    //    {
+                    //        index = 5;
+                    //        //   AddWiadomosc(hrefList);
+                    //    }
+                    //}
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        string link = "";
+                        if (hrefList[i].Key.Contains("http"))
+                        {
+                            link = hrefList[i].Key;
+                        }
+                        else
+                        {
+                            link = "http://www.gkskatowice.eu" + hrefList[i].Key;
+                            //link = "http://www.orlenliga.pl/" + hrefList[i].Key;
+                        }
+
+                        if (link.Contains("video"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Oglądaj video", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                            if (link.Contains("gallery"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Przeglądaj galerie", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString().Replace("&#8211;", "-"), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Więcej", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+
+                        //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
+                    }
+                }
+                if (listTemp2.Count > 0)
+                {
+                    hrefList = listTemp2;
+                }
+            }
+            return list;
+
+        }
+
+        public static IList<Attachment> GetCardsAttachmentsKultura(ref List<IGrouping<string, string>> hrefList, bool newUser = false)
+        {
+            List<Attachment> list = new List<Attachment>();
+
+            string urlAddress = "https://www.kleszczow.pl/kultura-komunikaty/";
+            // string urlAddress = "http://www.orlenliga.pl/";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            request.Accept = "text/html";
+            request.Method = "GET";
+            request.UserAgent = ".NET Framework Test Client";
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+
+                if (response.CharacterSet == null)
+                {
+                    readStream = new StreamReader(receiveStream);
+                }
+                else
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
+
+                string data = readStream.ReadToEnd();
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(data);
+
+                string matchResultDivId = "media";
+                string xpath = String.Format("//div[@class='{0}']", matchResultDivId);
+                var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
+                string text = "";
+                foreach (var person in people)
+                {
+                    text += person;
+                }
+
+                HtmlDocument doc2 = new HtmlDocument();
+
+                doc2.LoadHtml(text);
+                hrefList = doc2.DocumentNode.SelectNodes("//a")
+                                  .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/aktualnosci/")).GroupBy(p => p.ToString())
+                                  .ToList();
+
+                var imgList = doc2.DocumentNode.SelectNodes("//img")
+                                  .Select(p => p.GetAttributeValue("src", "not found"))
+                                  .ToList();
+
+                var titleList = doc2.DocumentNode.SelectNodes("//h2").Select(p => p.InnerText)
+                                  .ToList();
+
+                response.Close();
+                readStream.Close();
+
+                int index = 5;
+
+                //       DataTable dt = GetWiadomosciPilka();
+
+                if (newUser == true)
+                {
+
+                    //    if (.Count > 0)
+                    //    {
+                    //        List<int> deleteList = new List<int>();
+                    //        var listTemp = new List<System.Linq.IGrouping<string, string>>();
+                    //        var imageListTemp = new List<string>();
+                    //        var titleListTemp = new List<string>();
+
+                    //        for (int i = 0; i < hrefList.Count; i++)
+                    //        {
+                    //            if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
+                    //                dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key
+                    //            )
+                    //            {
+                    //                listTemp.Add(hrefList[i]);
+                    //                imageListTemp.Add("http://www.gkskatowice.eu" + imgList[i]);
+                    //                titleListTemp.Add(titleList[i].Replace("&quot;", ""));
+                    //            }
+                    //            listTemp2.Add(hrefList[i]);
+                    //        }
+                    //        hrefList = listTemp;
+                    //        index = hrefList.Count;
+                    //        imgList = imageListTemp;
+                    //        titleList = titleListTemp;
+                    //        //   AddWiadomosc(listTemp2);
+                    //    }
+                    //    else
+                    //    {
+                    //        index = 5;
+                    //        //   AddWiadomosc(hrefList);
+                    //    }
+                    //}
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        string link = "";
+                        if (hrefList[i].Key.Contains("http"))
+                        {
+                            link = hrefList[i].Key;
+                        }
+                        else
+                        {
+                            link = "http://www.gkskatowice.eu" + hrefList[i].Key;
+                            //link = "http://www.orlenliga.pl/" + hrefList[i].Key;
+                        }
+
+                        if (link.Contains("video"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Oglądaj video", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                            if (link.Contains("gallery"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Przeglądaj galerie", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString().Replace("&#8211;", "-"), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Więcej", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+
+                        //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
+                    }
+                }
+                if (listTemp2.Count > 0)
+                {
+                    hrefList = listTemp2;
+                }
+            }
+            return list;
+
+        }
+        public static IList<Attachment> GetCardsAttachmentsSport(ref List<IGrouping<string, string>> hrefList, bool newUser = false)
+        {
+            List<Attachment> list = new List<Attachment>();
+
+            string urlAddress = "https://www.kleszczow.pl/sport-komunikaty/";
+            // string urlAddress = "http://www.orlenliga.pl/";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            request.Accept = "text/html";
+            request.Method = "GET";
+            request.UserAgent = ".NET Framework Test Client";
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+
+                if (response.CharacterSet == null)
+                {
+                    readStream = new StreamReader(receiveStream);
+                }
+                else
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
+
+                string data = readStream.ReadToEnd();
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(data);
+
+                string matchResultDivId = "media";
+                string xpath = String.Format("//div[@class='{0}']", matchResultDivId);
+                var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
+                string text = "";
+                foreach (var person in people)
+                {
+                    text += person;
+                }
+
+                HtmlDocument doc2 = new HtmlDocument();
+
+                doc2.LoadHtml(text);
+                hrefList = doc2.DocumentNode.SelectNodes("//a")
+                                  .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/aktualnosci/")).GroupBy(p => p.ToString())
+                                  .ToList();
+
+                var imgList = doc2.DocumentNode.SelectNodes("//img")
+                                  .Select(p => p.GetAttributeValue("src", "not found"))
+                                  .ToList();
+
+                var titleList = doc2.DocumentNode.SelectNodes("//h2").Select(p => p.InnerText)
+                                  .ToList();
+
+                response.Close();
+                readStream.Close();
+
+                int index = 5;
+
+                //       DataTable dt = GetWiadomosciPilka();
+
+                if (newUser == true)
+                {
+
+                    //    if (.Count > 0)
+                    //    {
+                    //        List<int> deleteList = new List<int>();
+                    //        var listTemp = new List<System.Linq.IGrouping<string, string>>();
+                    //        var imageListTemp = new List<string>();
+                    //        var titleListTemp = new List<string>();
+
+                    //        for (int i = 0; i < hrefList.Count; i++)
+                    //        {
+                    //            if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
+                    //                dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key
+                    //            )
+                    //            {
+                    //                listTemp.Add(hrefList[i]);
+                    //                imageListTemp.Add("http://www.gkskatowice.eu" + imgList[i]);
+                    //                titleListTemp.Add(titleList[i].Replace("&quot;", ""));
+                    //            }
+                    //            listTemp2.Add(hrefList[i]);
+                    //        }
+                    //        hrefList = listTemp;
+                    //        index = hrefList.Count;
+                    //        imgList = imageListTemp;
+                    //        titleList = titleListTemp;
+                    //        //   AddWiadomosc(listTemp2);
+                    //    }
+                    //    else
+                    //    {
+                    //        index = 5;
+                    //        //   AddWiadomosc(hrefList);
+                    //    }
+                    //}
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        string link = "";
+                        if (hrefList[i].Key.Contains("http"))
+                        {
+                            link = hrefList[i].Key;
+                        }
+                        else
+                        {
+                            link = "http://www.gkskatowice.eu" + hrefList[i].Key;
+                            //link = "http://www.orlenliga.pl/" + hrefList[i].Key;
+                        }
+
+                        if (link.Contains("video"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Oglądaj video", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                            if (link.Contains("gallery"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Przeglądaj galerie", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString().Replace("&#8211;", "-"), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Więcej", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+
+                        //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
+                    }
+                }
+                if (listTemp2.Count > 0)
+                {
+                    hrefList = listTemp2;
+                }
+            }
+            return list;
+
+        }
+
+        public static IList<Attachment> GetCardsAttachmentsInwestycje(ref List<IGrouping<string, string>> hrefList, bool newUser = false)
+        {
+            List<Attachment> list = new List<Attachment>();
+
+            string urlAddress = "https://www.kleszczow.pl/inwestycje-2/";
+            // string urlAddress = "http://www.orlenliga.pl/";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+            request.Accept = "text/html";
+            request.Method = "GET";
+            request.UserAgent = ".NET Framework Test Client";
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            var listTemp2 = new List<System.Linq.IGrouping<string, string>>();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+
+                if (response.CharacterSet == null)
+                {
+                    readStream = new StreamReader(receiveStream);
+                }
+                else
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
+
+                string data = readStream.ReadToEnd();
+
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(data);
+
+                string matchResultDivId = "media";
+                string xpath = String.Format("//div[@class='{0}']", matchResultDivId);
+                var people = doc.DocumentNode.SelectNodes(xpath).Select(p => p.InnerHtml);
+                string text = "";
+                foreach (var person in people)
+                {
+                    text += person;
+                }
+
+                HtmlDocument doc2 = new HtmlDocument();
+
+                doc2.LoadHtml(text);
+                hrefList = doc2.DocumentNode.SelectNodes("//a")
+                                  .Select(p => p.GetAttributeValue("href", "not found")).Where(p => p.Contains("/aktualnosci/")).GroupBy(p => p.ToString())
+                                  .ToList();
+
+                var imgList = doc2.DocumentNode.SelectNodes("//img")
+                                  .Select(p => p.GetAttributeValue("src", "not found"))
+                                  .ToList();
+
+                var titleList = doc2.DocumentNode.SelectNodes("//h2").Select(p => p.InnerText)
+                                  .ToList();
+
+                response.Close();
+                readStream.Close();
+
+                int index = 5;
+
+                //       DataTable dt = GetWiadomosciPilka();
+
+                if (newUser == true)
+                {
+
+                    //    if (.Count > 0)
+                    //    {
+                    //        List<int> deleteList = new List<int>();
+                    //        var listTemp = new List<System.Linq.IGrouping<string, string>>();
+                    //        var imageListTemp = new List<string>();
+                    //        var titleListTemp = new List<string>();
+
+                    //        for (int i = 0; i < hrefList.Count; i++)
+                    //        {
+                    //            if (dt.Rows[dt.Rows.Count - 1]["Wiadomosc1"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc2"].ToString() != hrefList[i].Key &&
+                    //                dt.Rows[dt.Rows.Count - 1]["Wiadomosc3"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc4"].ToString() != hrefList[i].Key && dt.Rows[dt.Rows.Count - 1]["Wiadomosc5"].ToString() != hrefList[i].Key
+                    //            )
+                    //            {
+                    //                listTemp.Add(hrefList[i]);
+                    //                imageListTemp.Add("http://www.gkskatowice.eu" + imgList[i]);
+                    //                titleListTemp.Add(titleList[i].Replace("&quot;", ""));
+                    //            }
+                    //            listTemp2.Add(hrefList[i]);
+                    //        }
+                    //        hrefList = listTemp;
+                    //        index = hrefList.Count;
+                    //        imgList = imageListTemp;
+                    //        titleList = titleListTemp;
+                    //        //   AddWiadomosc(listTemp2);
+                    //    }
+                    //    else
+                    //    {
+                    //        index = 5;
+                    //        //   AddWiadomosc(hrefList);
+                    //    }
+                    //}
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        string link = "";
+                        if (hrefList[i].Key.Contains("http"))
+                        {
+                            link = hrefList[i].Key;
+                        }
+                        else
+                        {
+                            link = "http://www.gkskatowice.eu" + hrefList[i].Key;
+                            //link = "http://www.orlenliga.pl/" + hrefList[i].Key;
+                        }
+
+                        if (link.Contains("video"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Oglądaj video", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                            if (link.Contains("gallery"))
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString(), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Przeglądaj galerie", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+                        else
+                        {
+                            list.Add(GetHeroCard(
+                            titleList[i].ToString().Replace("&#8211;", "-"), "", "",
+                            new CardImage(url: imgList[i]),
+                            new CardAction(ActionTypes.OpenUrl, "Więcej", value: link),
+                            new CardAction(ActionTypes.OpenUrl, "Udostępnij", value: "https://www.facebook.com/sharer/sharer.php?u=" + link))
+                            );
+                        }
+
+                        //  list.Add(new Microsoft.Bot.Connector.VideoCard(titleList[i], "", "",null)
+                    }
+                }
+                if (listTemp2.Count > 0)
+                {
+                    hrefList = listTemp2;
+                }
+            }
+            return list;
+
+        }
 
         private static Attachment GetHeroCard(string title, string subtitle, string text, CardImage cardImage, CardAction cardAction, CardAction cardAction2)
         {

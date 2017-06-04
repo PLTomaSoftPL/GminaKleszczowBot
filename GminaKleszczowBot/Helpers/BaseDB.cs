@@ -95,6 +95,60 @@ namespace GksKatowiceBot.Helpers
                 return null;
             }
         }
+
+        public static void AddWiadomosci(List<System.Linq.IGrouping<string, string>> hrefList)
+        {
+            try
+            {
+                SqlConnection sqlConnection1 = new SqlConnection("Server=tcp:plps.database.windows.net,1433;Initial Catalog=PLPS;Persist Security Info=False;User ID=tomasoft;Password=Tomason18,;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                SqlCommand cmd = new SqlCommand();
+                SqlDataReader reader;
+
+                cmd.CommandText = "INSERT INTO [dbo].[WiadomosciGminaKleszczow] (Nazwa,DataUtw,Wiadomosc1,Wiadomosc2,Wiadomosc3,Wiadomosc4,Wiadomosc5) VALUES ('" + "" + "','" + DateTime.Now + "','" + hrefList[0].Key + "','" + hrefList[1].Key + "','" + hrefList[2].Key + "','" + hrefList[3].Key + "','" + hrefList[4].Key + "')";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = sqlConnection1;
+
+                sqlConnection1.Open();
+                cmd.ExecuteNonQuery();
+
+                sqlConnection1.Close();
+            }
+            catch (Exception ex)
+            {
+                AddToLog("Błąd dodawania wiadomości: " + ex.ToString());
+            }
+        }
+
+        public static DataTable GetWiadomosci()
+        {
+            try
+            {
+                SqlConnection sqlConnection1 = new SqlConnection("Server=tcp:plps.database.windows.net,1433;Initial Catalog=PLPS;Persist Security Info=False;User ID=tomasoft;Password=Tomason18,;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                SqlCommand cmd = new SqlCommand();
+                SqlDataReader reader;
+                DataTable dataTable = new DataTable();
+
+
+                sqlConnection1.Open();
+
+                cmd.CommandText = "Select Wiadomosc1,Wiadomosc2,Wiadomosc3,Wiadomosc4,Wiadomosc5 from [dbo].[WiadomosciGminaKleszczow]";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = sqlConnection1;
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                // this will query your database and return the result to your datatable
+                da.Fill(dataTable);
+                sqlConnection1.Close();
+                da.Dispose();
+                return dataTable;
+            }
+            catch (Exception ex)
+            {
+                AddToLog("Błąd dodawania wiadomości: " + ex.ToString());
+                return null;
+            }
+        }
+
         public static void DeleteUser(string UserId)
         {
             try

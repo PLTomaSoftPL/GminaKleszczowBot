@@ -140,6 +140,8 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="ClassDiagram1.cd" />
+    <None Include="Properties\PublishProfiles\BotLechPoznan - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\BotLechPoznan - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\GminaKleszczowBot - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\GminaKleszczowBot - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">

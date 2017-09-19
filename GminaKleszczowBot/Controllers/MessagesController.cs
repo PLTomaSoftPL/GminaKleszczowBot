@@ -36,7 +36,7 @@ namespace GksKatowiceBot
                     {
                         WebClient client = new WebClient();
 
-                        if (activity.Attachments != null)
+                        if (activity.Attachments != null && activity.Attachments.Count > 0 && activity.Text != null && !activity.Text.Contains("https://www.kleszczow.pl/"))
                         {
                             //Uri uri = new Uri(activity.Attachments[0].ContentUrl);
                             string filename = activity.Attachments[0].ContentUrl.Substring(activity.Attachments[0].ContentUrl.Length - 4, 3).Replace(".", "");
@@ -54,6 +54,11 @@ namespace GksKatowiceBot
                             }
                             if (activity.Attachments[0].ContentType.Contains("image")) client.UploadData(filename + ".png", data); //since the baseaddress
                             else if (activity.Attachments[0].ContentType.Contains("video")) client.UploadData(filename + ".mp4", data);
+                        }
+                        else if (activity.Text.Contains("https://www.kleszczow.pl"))
+                        {
+                            activity.Attachments = BaseGETMethod.GetCardsAttachmentsExtra(false, activity.Text);
+                            activity.Text = "Ważne!";
                         }
 
 
@@ -77,6 +82,12 @@ namespace GksKatowiceBot
                                 BaseDB.AddToLog("Bład rozkładania Jsona " + ex.ToString());
                             }
                         }
+
+
+                        var toReply = activity.CreateReply(String.Empty);
+                        var connectorNew = new ConnectorClient(new Uri(activity.ServiceUrl));
+                        toReply.Type = ActivityTypes.Typing;
+                        await connectorNew.Conversations.SendToConversationAsync(toReply);
 
                         MicrosoftAppCredentials.TrustServiceUrl(@"https://facebook.botframework.com", DateTime.MaxValue);
                         if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci")
@@ -606,8 +617,7 @@ namespace GksKatowiceBot
                             message.Conversation = new ConversationAccount(id: conversationId.Id);
                             message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                             List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
-                            message.Text = @"Cześć
-Jestem BOTem, Twoim asystentem do kontaktu z Gminą Kleszczów. Powiadomię cię o wszystkich aktualnościach z życia Gminy. Ponadto spodziewaj się powiadomień w formie komunikatów, bądź innych informacji przekazywanych przez moderatora.   
+                            message.Text = @"Witaj w interaktywnym przewodniku po stronach internetowych Gminy Kleszczów. Powiadomię cię o wszystkich aktualnościach z życia Gminy. Ponadto spodziewaj się powiadomień w formie komunikatów, bądź innych informacji przekazywanych przez moderatora.   
 ";
                             // message.Attachments = GetCardsAttachments(ref hrefList, true);
 
@@ -700,8 +710,7 @@ Jestem BOTem, Twoim asystentem do kontaktu z Gminą Kleszczów. Powiadomię cię
                             message.Conversation = new ConversationAccount(id: conversationId.Id);
                             message.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                             List<IGrouping<string, string>> hrefList = new List<IGrouping<string, string>>();
-                            message.Text = @"Cześć
-Jestem BOTem, Twoim asystentem do kontaktu z Gminą Kleszczów. Powiadomię cię o wszystkich aktualnościach z życia Gminy. Ponadto spodziewaj się powiadomień w formie komunikatów, bądź innych informacji przekazywanych przez moderatora.   
+                            message.Text = @"Witaj w interaktywnym przewodniku po stronach internetowych Gminy Kleszczów. Powiadomię cię o wszystkich aktualnościach z życia Gminy. Ponadto spodziewaj się powiadomień w formie komunikatów, bądź innych informacji przekazywanych przez moderatora.   
 ";
                             // message.Attachments = GetCardsAttachments(ref hrefList, true);
 

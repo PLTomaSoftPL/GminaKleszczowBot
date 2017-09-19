@@ -118,6 +118,28 @@ namespace GksKatowiceBot.Helpers
                 AddToLog("Błąd dodawania wiadomości: " + ex.ToString());
             }
         }
+        public static void AddWiadomosci2(List<System.Linq.IGrouping<string, string>> hrefList)
+        {
+            try
+            {
+                SqlConnection sqlConnection1 = new SqlConnection("Server=tcp:plps.database.windows.net,1433;Initial Catalog=PLPS;Persist Security Info=False;User ID=tomasoft;Password=Tomason18,;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                SqlCommand cmd = new SqlCommand();
+                SqlDataReader reader;
+
+                cmd.CommandText = "INSERT INTO [dbo].[WiadomosciGminaKleszczowSolpark] (Nazwa,DataUtw,Wiadomosc1,Wiadomosc2,Wiadomosc3,Wiadomosc4,Wiadomosc5) VALUES ('" + "" + "','" + DateTime.Now + "','" + hrefList[0].Key + "','" + hrefList[1].Key + "','" + hrefList[2].Key + "','" + hrefList[3].Key + "','" + "" + "')";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = sqlConnection1;
+
+                sqlConnection1.Open();
+                cmd.ExecuteNonQuery();
+
+                sqlConnection1.Close();
+            }
+            catch (Exception ex)
+            {
+                AddToLog("Błąd dodawania wiadomości: " + ex.ToString());
+            }
+        }
 
         public static DataTable GetWiadomosci()
         {

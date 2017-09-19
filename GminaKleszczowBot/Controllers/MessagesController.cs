@@ -482,6 +482,14 @@ namespace GksKatowiceBot
                         else
                                 if (activity.Text == "USER_DEFINED_PAYLOAD")
                         {
+
+                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
+                            userStruct.userName = activity.From.Name;
+                            userStruct.userId = activity.From.Id;
+                            userStruct.botName = activity.Recipient.Name;
+                            userStruct.botId = activity.Recipient.Id;
+                            userStruct.ServiceUrl = activity.ServiceUrl;
+
                             //           BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
                             BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
@@ -758,29 +766,56 @@ namespace GksKatowiceBot
                     message.ChannelData = JObject.FromObject(new
                     {
                         notification_type = "REGULAR",
+                        //buttons = new dynamic[]
+                        // {
+                        //     new
+                        //     {
+                        //    type ="postback",
+                        //    title="Tytul",
+                        //    vslue = "tytul",
+                        //    payload="DEVELOPER_DEFINED_PAYLOAD"
+                        //     }
+                        // },
                         quick_replies = new dynamic[]
-                            {
-                               new
-                        {
+                                   {
+                                //new
+                                //{oh
+                                //    content_type = "text",
+                                //    title = "Aktualności",
+                                //    payload = "DEFINED_PAYLOAD_FOR_PICKING_BLUE",
+                                //    image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Blue%20Ball.png"
+                                //},
+                                new
+                                {
                                     content_type = "text",
-                                    title = "Piłka nożna",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Pilka_Nozna",
-                                  //  image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                    title = "Aktualności",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci",
+                                    //     image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                 //   image_url = "http://archiwum.koluszki.pl/zdjecia/naglowki_nowe/listopad%202013/pi%C5%82ka[1].png"
+                                },
+
+                                new
+                                {
+                                    content_type = "text",
+                                    title = "Kultura",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Kultura",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
                                 },
                                 new
-                        {
+                                {
                                     content_type = "text",
-                                    title = "Siatkówka",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Siatkowka",
-                                   // image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Blue%20Ball.png"
-                                },                                new
-                        {
-                                    content_type = "text",
-                                    title = "Hokej",
-                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Hokej",
-                                   // image_url = "https://cdn3.iconfinder.com/data/icons/developperss/PNG/Green%20Ball.png"
+                                    title = "Sport",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Sport",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
                                 },
-                                                           }
+                                                                                                new
+                                {
+                                    content_type = "text",
+                                    title = "Solpark",
+                                    payload = "DEVELOPER_DEFINED_PAYLOAD_Solpark",
+                                //       image_url = "https://www.samo-lepky.sk/data/11/hokej5.png"
+                                },
+                                                                   }
                     });
 
                     message.AttachmentLayout = null;

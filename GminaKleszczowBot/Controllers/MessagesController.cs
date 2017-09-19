@@ -92,17 +92,6 @@ namespace GksKatowiceBot
                         MicrosoftAppCredentials.TrustServiceUrl(@"https://facebook.botframework.com", DateTime.MaxValue);
                         if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Aktualnosci")
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
-                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
-
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
@@ -179,17 +168,6 @@ namespace GksKatowiceBot
                         }
                         else if (komenda == "DEVELOPER_DEFINED_PAYLOAD_OGminie" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_OGminie")
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
-                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
-
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
@@ -270,17 +248,6 @@ namespace GksKatowiceBot
 
                         else if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Kultura" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Kultura")
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
-                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
-
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
@@ -358,17 +325,6 @@ namespace GksKatowiceBot
 
                         else if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Solpark" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Solpark")
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
-                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
-
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
@@ -446,17 +402,6 @@ namespace GksKatowiceBot
 
                         else if (komenda == "DEVELOPER_DEFINED_PAYLOAD_Sport" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_Sport")
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
-                            //       BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                            //        BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
-
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
@@ -537,17 +482,9 @@ namespace GksKatowiceBot
                         else
                                 if (activity.Text == "USER_DEFINED_PAYLOAD")
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
                             //           BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
                             BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
 
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
@@ -630,17 +567,6 @@ namespace GksKatowiceBot
                         else
                                 if (komenda== "DEVELOPER_DEFINED_PAYLOAD_HELP" || activity.Text == "DEVELOPER_DEFINED_PAYLOAD_HELP" || activity.Text == "HELP")
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
-                            //               BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                            //                 BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
-
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
@@ -725,17 +651,6 @@ namespace GksKatowiceBot
 
                         else
                         {
-                            Parameters.Parameters.userDataStruct userStruct = new Parameters.Parameters.userDataStruct();
-                            userStruct.userName = activity.From.Name;
-                            userStruct.userId = activity.From.Id;
-                            userStruct.botName = activity.Recipient.Name;
-                            userStruct.botId = activity.Recipient.Id;
-                            userStruct.ServiceUrl = activity.ServiceUrl;
-
-                            //    BaseDB.AddToLog("UserName: " + userStruct.userName + " User Id: " + userStruct.userId + " BOtId: " + userStruct.botId + " BotName: " + userStruct.botName + " url: " + userStruct.ServiceUrl);
-                            //             BaseDB.AddUser(userStruct.userName, userStruct.userId, userStruct.botName, userStruct.botId, userStruct.ServiceUrl, 1);
-
-                            Parameters.Parameters.listaAdresow.Add(userStruct);
                             ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                             var userAccount = new ChannelAccount(name: activity.From.Name, id: activity.From.Id);
                             var botAccount = new ChannelAccount(name: activity.Recipient.Name, id: activity.Recipient.Id);
